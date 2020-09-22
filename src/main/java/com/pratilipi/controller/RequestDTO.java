@@ -1,4 +1,4 @@
-package com.pratilipi.dto;
+package com.pratilipi.controller;
 
 public class RequestDTO {
 

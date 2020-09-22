@@ -8,20 +8,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pratilipi.dto.RequestDTO;
-import com.pratilipi.dto.ResponseDTO;
 
 
 @CrossOrigin
@@ -29,6 +25,10 @@ import com.pratilipi.dto.ResponseDTO;
 @RequestMapping("/game")
 public class GameController {
 
+	
+	@Autowired
+	private Environment env;
+	
 	private static final int YELLOW_COLOR_USER = 1;
 	
 	private static final int RED_COLOR_USER = 2;
@@ -39,7 +39,9 @@ public class GameController {
 	
 	private static  int RED_USER_ID_COUNT = 0;
 	
-	private static final String FILE_PATH="C:\\Users\\neebal\\Documents\\Ajinkya\\Personal";
+	private static String FILE_PATH = "filePath";
+	
+	//private static final String FILE_PATH="C:\\Users\\neebal\\Documents\\Ajinkya\\Personal";
 	
 	
 	@RequestMapping("/start")
@@ -64,7 +66,7 @@ public class GameController {
     	   }
     	   builder.append("\n");//append new line at the end of the row
     	}
-    	File file = new File(FILE_PATH + File.separator +GAME_ID+".txt");
+    	File file = new File(env.getProperty(FILE_PATH) + File.separator +GAME_ID+".txt");
     	//file.mkdirs(); // If the directory containing the file and/or its parent(s) does not exist
     	System.out.println(file.createNewFile());
     	BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -166,7 +168,7 @@ public class GameController {
 		BufferedReader reader;
 		try 
 		{
-			reader = new BufferedReader(new FileReader(FILE_PATH + File.separator +gameId+".txt"));
+			reader = new BufferedReader(new FileReader(env.getProperty(FILE_PATH) + File.separator +gameId+".txt"));
 			String line = "";
 			int row = 0;
 			while((line = reader.readLine()) != null)
@@ -201,7 +203,7 @@ public class GameController {
 	private void writeToFile(int [][]gameMatrix,int gameId)
 	{
 		try {
-		File temp = new File(FILE_PATH + File.separator +gameId+".txt");
+		File temp = new File(env.getProperty(FILE_PATH) + File.separator +gameId+".txt");
 		if (temp.exists()) {
 			PrintWriter writer = new PrintWriter(temp);
 			writer.print("");
@@ -219,7 +221,7 @@ public class GameController {
     	   }
     	   builder.append("\n");//append new line at the end of the row
     	}
-    	BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH + File.separator +gameId+".txt" ));
+    	BufferedWriter writer = new BufferedWriter(new FileWriter(env.getProperty(FILE_PATH) + File.separator +gameId+".txt" ));
     	writer.write(builder.toString());//save the string representation of the board
     	writer.close();
 		
